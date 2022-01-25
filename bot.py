@@ -1,5 +1,5 @@
-import os
 from io import BytesIO
+from config import Config
 
 from telegram import Update, Sticker
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, ConversationHandler
@@ -7,11 +7,14 @@ import logging
 from translator import translator
 from pokeye.pokeye import poke_predictor
 
+# create config.py with your API_KEY
 '''
-create config.env with bot_token secret key as value:
-bot_token="12345667890:XXXXXXXXXXXXXXXXXXXXXXX"
+import os
+
+class Config(object):
+    API_KEY = os.environ.get('API_KEY', '1234567890:XXXXXxxxxxxXXXXXxxX')
 '''
-BOT_TOKEN = os.environ['bot_token']
+API_KEY = Config.API_KEY
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -53,7 +56,7 @@ def sticker_to_emoji(update: Update, _: CallbackContext) -> None:
 
 
 def main() -> None:
-    updater = Updater(token=BOT_TOKEN, use_context=True)
+    updater = Updater(token=API_KEY, use_context=True)
 
     dispatcher = updater.dispatcher
 
