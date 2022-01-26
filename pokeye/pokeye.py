@@ -1,30 +1,19 @@
 import numpy as np
-import pandas as pd
 import cv2 as cv
 import os
-import matplotlib.pyplot as plt
-import seaborn as sns
 import warnings
-import gc
-import requests
 
-from PIL import Image
-from io import BytesIO
+from pathlib import Path
 
-from collections import Counter
-from sklearn.model_selection import train_test_split
-from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import BatchNormalization, Conv2D, MaxPooling2D
-from keras.layers import Activation, Flatten, Dropout, Dense
-from keras import backend as K
+from keras.layers import Flatten, Dropout, Dense
 from keras.callbacks import ModelCheckpoint
-from tensorflow.keras.utils import to_categorical
 
 warnings.filterwarnings('ignore')
 
-path = 'pokeye/input/dataset'  # Path to directory which contains classes
-classes = os.listdir(path)  # List of all classes
+path = Path('pokeye/input/dataset')  # Path to directory which contains classes
+classes = sorted(os.listdir(path))  # List of all classes
 # print(f'Total number of categories: {len(classes)}')
 
 # A dictionary which contains class and number of images in that class
@@ -73,13 +62,13 @@ model.add(Dense(len(imbalanced), activation='softmax'))
 
 # model.summary()
 
-checkpoint = ModelCheckpoint('pokeye/working/best_model.hdf5', verbose=1, monitor='val_accuracy', save_best_only=True)
+checkpoint = ModelCheckpoint(Path('pokeye/working/best_model.hdf5'), verbose=1, monitor='val_accuracy', save_best_only=True)
 
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
 
 # Loading weights from best model
-model.load_weights('pokeye/working/best_model.hdf5')
+model.load_weights(Path('pokeye/working/best_model.hdf5'))
 
 # Saving model
 # model.save('pokeye/working/model.hdf5')
