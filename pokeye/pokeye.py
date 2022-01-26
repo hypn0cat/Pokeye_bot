@@ -85,4 +85,4 @@ def poke_predictor(f):
     percents = round(preds[0][pred_class] * 100, 2)
     print(pred_pokemon, percents)
 
-    return f'Это {pred_pokemon} с вероятностью {percents}%'
+    return f'It\'s {pred_pokemon}! I\'m {percents}% certain of this'

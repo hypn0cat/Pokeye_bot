@@ -6,7 +6,7 @@ def translator(phrase):
         lang = TextBlob(phrase).detect_language()
         ru_phrase = TextBlob(phrase).translate(to="ru")
         print(phrase, ru_phrase, sep=" --- ")
-        return f'Перевод {lang}->ru: {ru_phrase}'
+        return f'Translating {lang}->ru: {ru_phrase}'
     except Exception as e:
         print("Error:", e)
-        return "Перевод не найден"
+        return "Can't translate"

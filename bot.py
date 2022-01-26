@@ -21,11 +21,11 @@ logger = logging.getLogger(__name__)
 
 
 def start(update: Update, _: CallbackContext) -> None:
-    update.message.reply_text("Hi! Send me a Pokémon pic")
+    update.message.reply_text("Hi! Send me a Pokémon pic (1st gen only)")
 
 
 def get_help(update: Update, _: CallbackContext) -> None:
-    update.message.reply_text("Send me a Pokémon pic")
+    update.message.reply_text("Send me a Pokémon pic (1st gen only)")
 
 
 def reply_message(update: Update, _: CallbackContext) -> None:
