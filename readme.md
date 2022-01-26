@@ -7,3 +7,5 @@
 6. run `python bot.py`
 
 > Telegram Bot: https://t.me/pokeye_bot
+
+You can create your own models with `python pokeye/trainer.py`
