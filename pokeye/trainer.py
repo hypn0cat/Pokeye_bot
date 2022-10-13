@@ -26,14 +26,14 @@ warnings.filterwarnings('ignore')
 
 path = Path('input/dataset')  # Path to directory which contains classes
 classes = sorted(os.listdir(path))  # List of all classes
-print(f'Total number of categories: {len(classes)}')
+print(f'Всего категорий: {len(classes)}')
 
 # A dictionary which contains class and number of images in that class
 counts = {}
 for c in classes:
     counts[c] = len(os.listdir(os.path.join(path, c)))
 
-print(f'Total number of images in dataset: {sum(list(counts.values()))}')
+print(f'Всего изображений в датасете: {sum(list(counts.values()))}')
 
 # Number of images in each class plot
 # fig = plt.figure(figsize=(25, 5))
@@ -72,7 +72,7 @@ for c in classes:
 
             # If we can't read image - we skip it
             except:
-                print(os.path.join(dir_path, i), '[ERROR] can\'t read the file')
+                print(os.path.join(dir_path, i), '[ОШИБКА] нельзя прочитать файл')
                 continue
 
 print('DONE')

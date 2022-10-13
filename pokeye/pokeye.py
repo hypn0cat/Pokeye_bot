@@ -12,7 +12,7 @@ from keras.callbacks import ModelCheckpoint
 
 warnings.filterwarnings('ignore')
 
-path = Path('pokeye/input/dataset')  # Path to directory which contains classes
+path = Path('input/dataset')  # Path to directory which contains classes
 classes = sorted(os.listdir(path))  # List of all classes
 # print(f'Total number of categories: {len(classes)}')
 

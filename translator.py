@@ -10,3 +10,4 @@ def translator(phrase):
     except Exception as e:
         print("Error:", e)
         return "Can't translate"
+
