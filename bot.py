@@ -62,8 +62,8 @@ def main() -> None:
 
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", get_help))
-    # dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, reply_message))
     dispatcher.add_handler(MessageHandler(Filters.photo, photo))
+    # dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, reply_message))
     # dispatcher.add_handler(MessageHandler(Filters.sticker, sticker))
     # dispatcher.add_handler(MessageHandler(Filters.text, emoji_to_sticker))
     # dispatcher.add_handler(MessageHandler(Filters.sticker, sticker_to_emoji))
