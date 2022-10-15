@@ -20,7 +20,7 @@ from keras.layers import BatchNormalization, Conv2D, MaxPooling2D
 from keras.layers import Activation, Flatten, Dropout, Dense
 from keras import backend as K
 from keras.callbacks import ModelCheckpoint
-from tensorflow.keras.utils import to_categorical
+from keras.utils import to_categorical
 
 warnings.filterwarnings('ignore')
 
