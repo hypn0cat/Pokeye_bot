@@ -21,6 +21,15 @@ counts = {}
 for c in classes:
     counts[c] = len(os.listdir(os.path.join(path, c)))
 
+
+# Построение графика количества изображений в каждом классе
+# fig = plt.figure(figsize=(25, 5))
+# # sns.lineplot(x=list(counts.keys()), y=list(counts.values())).set_title('Количество изображений')
+# sns.barplot(x=list(counts.keys()), y=list(counts.values())).set_title('Количество изображений')
+# plt.xticks(rotation=90)
+# plt.margins(x=0)
+# plt.show()
+
 # Sort our "counts" dictionary and selecting 5 classes with most number of images
 imbalanced = sorted(counts.items(), key=lambda x: x[1], reverse=True)
 
@@ -62,7 +71,7 @@ model.add(Dense(len(imbalanced), activation='softmax'))
 
 # model.summary()
 
-checkpoint = ModelCheckpoint(Path('pokeye/working/best_model.hdf5'), verbose=1, monitor='val_accuracy', save_best_only=True)
+# checkpoint = ModelCheckpoint(Path('pokeye/working/best_model.hdf5'), verbose=1, monitor='val_accuracy', save_best_only=True)
 
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 

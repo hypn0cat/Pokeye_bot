@@ -24,58 +24,62 @@ from tensorflow.keras.utils import to_categorical
 
 warnings.filterwarnings('ignore')
 
-path = Path('input/dataset')  # Path to directory which contains classes
-classes = sorted(os.listdir(path))  # List of all classes
+path = Path('input/dataset')  # Путь к директории с датасетом
+classes = sorted(os.listdir(path))  # Список всех классов
 print(f'Всего категорий: {len(classes)}')
+# Всего категорий: 149
 
-# A dictionary which contains class and number of images in that class
+# Словарь, содержащий название класса и количество изображений
 counts = {}
 for c in classes:
     counts[c] = len(os.listdir(os.path.join(path, c)))
 
 print(f'Всего изображений в датасете: {sum(list(counts.values()))}')
+# Всего изображений в датасете: 10693
 
-# Number of images in each class plot
-# fig = plt.figure(figsize=(25, 5))
-# sns.lineplot(x=list(counts.keys()), y=list(counts.values())).set_title('Number of images in each class')
-# plt.xticks(rotation=90)
-# plt.margins(x=0)
-# plt.show()
+# Построение графика количества изображений в каждом классе
+fig = plt.figure(figsize=(25, 5))
+sns.barplot(x=list(counts.keys()), y=list(counts.values())).set_title('Количество изображений')
+plt.xticks(rotation=90)
+plt.margins(x=0)
+plt.show()
 
-# Sort our "counts" dictionary and selecting 5 classes with most number of images
-# imbalanced = sorted(counts.items(), key=lambda x: x[1], reverse=True)[:5]
-imbalanced = sorted(counts.items(), key=lambda x: x[1], reverse=True)
+# Сортируем наш словарь по количеству иозбражений и выбираем 5 классов,
+# имеющих максимальное число изображений
+imbalanced = sorted(counts.items(), key=lambda x: x[1], reverse=True)[:5]
 print(imbalanced)
+# [('Mewtwo', 307), ('Pikachu', 298), ('Charmander', 296), ('Bulbasaur', 289), ('Squirtle', 280)]
 
-# Taking only labels, it will come in handy in future
+# Сохраним только названия классов
 imbalanced = [i[0] for i in imbalanced]
 print(imbalanced)
+# ['Mewtwo', 'Pikachu', 'Charmander', 'Bulbasaur', 'Squirtle']
 
-X = []  # List of images
-Y = []  # List for labels
+X = []  # Список изображений
+Y = []  # Список названий классов
 
-# Loop through all classes
+# Цикл по классам
 for c in classes:
-    # We take only classes that we defined in 'imbalanced' list
+    # Используем только сохраненные в imbalanced классы
     if c in imbalanced:
         dir_path = os.path.join(path, c)
-        label = imbalanced.index(c)  # Our label is an index of class in 'imbalanced' list
+        label = imbalanced.index(c)
 
-        # Reading, resizing and adding image and label to lists
+        # Читаем, изменяем размер и добавляем изображение и название класса в списки
         for i in os.listdir(dir_path):
             image = cv.imread(os.path.join(dir_path, i))
 
             try:
-                resized = cv.resize(image, (96, 96))  # Resizing images to (96, 96)
+                resized = cv.resize(image, (96, 96))  # Сжимаем изображением до (96, 96)
                 X.append(resized)
                 Y.append(label)
 
-            # If we can't read image - we skip it
+            # Если изображение нельзя прочитать – пропускаем
             except:
                 print(os.path.join(dir_path, i), '[ОШИБКА] нельзя прочитать файл')
                 continue
 
-print('DONE')
+print('[ЗАВЕРШЕНО]')
 
 obj = Counter(Y)
 
@@ -85,26 +89,24 @@ obj = Counter(Y)
 # plt.margins(x=0)
 # plt.show()
 
-# Convert list with images to numpy array and reshape it
+# Конвертируем список изображений в массив numpy
 X = np.array(X).reshape(-1, 96, 96, 3)
 
-# Scaling data in array
+# Масштабируем массив
 X = X / 255.0
 
-# Convert labels to categorical format
 y = to_categorical(Y, num_classes=len(imbalanced))
 
-# Splitting data to train and test datasets
-# I'll use these datasets only for training, for final predictions I'll use random pictures from internet
+# Разделяем данные на наборы данных для обучения и теста
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y, shuffle=True, random_state=666)
 
-# Defining ImageDataGenerator Iinstance
-datagen = ImageDataGenerator(rotation_range=45,  # Degree range for random rotations
-                             zoom_range=0.2,  # Range for random zoom
-                             horizontal_flip=True,  # Randomly flip inputs horizontally
-                             width_shift_range=0.15,  # Range for horizontal shift
-                             height_shift_range=0.15,  # Range for vertical shift
-                             shear_range=0.2)  # Shear Intensity
+# Генерируем дополнительные изображения
+datagen = ImageDataGenerator(rotation_range=45,  # Случайный угол
+                             zoom_range=0.2,  # Случайное масштабирование
+                             horizontal_flip=True,  # Случайный наклон по горизонтали
+                             width_shift_range=0.15,  # Случайное смещение по ширине
+                             height_shift_range=0.15,  # Случайное смещение по высоте
+                             shear_range=0.2)  # Интенсивность сдвига
 
 datagen.fit(X_train)
 
@@ -161,8 +163,10 @@ model.add(Dense(len(imbalanced), activation='softmax'))
 
 # model.summary()
 
+# Сохраняем лучшую модель
 checkpoint = ModelCheckpoint(Path('working/best_model.hdf5'), verbose=1, monitor='val_accuracy', save_best_only=True)
 
+# В качестве функции потерь используем категориальную перекрестную энтропию
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 history = model.fit_generator(datagen.flow(X_train, y_train, batch_size=32), epochs=100,
                               validation_data=(X_test, y_test),
@@ -188,7 +192,7 @@ history = model.fit_generator(datagen.flow(X_train, y_train, batch_size=32), epo
 # Loading weights from best model
 model.load_weights(Path('working/best_model.hdf5'))
 
-# Saving all model
+# Сохранение модели
 model.save(Path('working/model.hdf5'))
 
 
